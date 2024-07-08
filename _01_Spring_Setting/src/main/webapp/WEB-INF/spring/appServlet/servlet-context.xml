@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   필요한 엘리먼트를 사용하기 위한 namespace 추가하는 부분
+xmlns : 키워드 => 키워드로 엘리먼트를 생성한다.
+xsi : schemaLocation 에서 namespace 를 사용하기 위한 설정파일인 xsd 파일을 링크를 걸어줘야 namespace 를 사용할 수 있는 상태가 된다.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <!--    ContextLoaderListener 객체에서 사용하는 설정파일
+            web.xml 을 읽으면서 제일 먼저 불러오는 설정파일이다.
+            프로젝트에서 전반적으로 사용되는 자원(DB 커넥션, 트렌잭션 처리, 파일 업로드 등)을 생성하고 설정.
+            bean 엘리먼트로 객체를 설정해서 스프링 컨테이너에 등록할 수 있는 설정도 할 수 있음.
+    -->
+
+
+    <!--    web.xml 파일에서 DispatcherServlet 설정 부분에서 읽어오는 설정 파일로 servlet 각각에 대한 설정을 지정한다.
+        Controller(url 관련), Annotation, ViewResolver, Interceptor 등의 설정을 작성한다.
+        spring 설정 파일의 동작 순서는 Web Application 이 구동되면서 web.xml 을 읽어들이고,
+        web.xml 에서 root-context.xml 파일을 읽어들여서 첫 번째 부모 Spring Container 를 구동하고,
+         그 다음 DispatcherServlet 관련 설정을 읽으면서
+          그 안에 지정된 servlet-context.xml 파일을 읽어 두 번째 자식 Spring Container 를 구동한다.
+        servlet-context 에 해당하는 container 가 나중에 구동되기 때문에 root-context container 에 있는
+         설정이나 bean 객체를 사용할 수 있지만,
+        먼저 구동되는 부모 컨테이너(root-container)에서는 자식 컨테이너(servlet-container)의 설정이나 bean 객체는 사용할 수 없다.
+-->
+
+    <!--    Spring Annotation 활성화-->
+    <mvc:annotation-driven/>
+
+    <!--    정적 리소스에 대한 접근 허용
+            기본적으로 Spring 에서는 정적 리소스에 대한 접근을 막고 있기 때문에 이 설정을 통해
+            html, js, css, img 파일 등 정적 파일에 대한 접근을 풀어줄 수 있다.
+            web 서버에서 기본적으로 rootpath 가 webapp 폴더로 잡혀있다. -->
+    <mvc:resources mapping="/resources/**" location="/resources/"></mvc:resources>
+    <mvc:resources mapping="/**" location="/static/"></mvc:resources>
+
+
+<!--DispatcherServlet 에서 사용 할 ViewResolver 객체 설정-->
+<!--
+    Controller 에서 String 이나 ModelAndView 객체를 리턴해주면 ViewResolver 가 동작하여 리턴된 문자열이나 ModelAndView 객체에
+    지정된 ViewName 에 해당하는 화면을 찾아주는데 prefix 로 지정된 문자열이 앞에 붙고, suffix 로 지정된 문자열이 뒤에 붙어서
+    하나의 View 파일을 찾아서 DispatcherServlet 으로 리턴한다.
+    prefix 가 /WEB-INF/views/ 이고, suffix 가 .jsp 라면
+    리턴된 문자열이 board/post => /WEB-INF/views/board/post.jsp 파일을 찾아서 리턴한다.
+-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+<!--        setter 메소드를 이용한 의존성 주입-->
+        <property name="prefix" value="/WEB-INF/views/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+
+<!--    Spring 에서는 bean 엘리먼트 말고도 annotation 으로도 bean 객체를 생성해서 등록할 수 있는데
+        @Component, @Controller, @Service, @Repository 등으로 빈 객체를 생성, 등록 할 수 있다.
+        어노테이션을 읽어서 bean 객체를 생성하고 등록하는 설정
+        context:component-scan 설정은 기본적으로 @Component 어노테이션을 읽어서 bean 객체를 생성하는데
+        @Controller, @Service, @Repository 가 @Component 를 포함하고 있기에 context:component-scan 에서 읽어 bean 객체 생성함.
+        base-package 속성으로 @Component, @Controller, @Service, @Repository 어노테이션들이 붙어있는 클래스를 찾을 패키지 지정.
+-->
+    <context:component-scan base-package="com.bit.springboard"/>
+</beans>
+
+
+
+

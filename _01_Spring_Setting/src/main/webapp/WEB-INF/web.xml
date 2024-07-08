@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         metadata-complete="false"
+         version="6.0">
+<!--    contextLoaderListener 설정-->
+<!--    어플리케이션의 규모가 커지면 Servlet 도 여러개가 존재할 것이다.
+        DispatcherServlet 으로 각각의 Servlet 에 대한 설정을 할 수 있는데,
+         모든 Servlet 이 공통적으로 가져야 되는 설정도 있을 것이다.
+        그래서 Servlet 단위의 설정이 아닌 Web Application 단위의 설정을 할 수 있는데,
+         그 설정을 할 수 있는 부분이 ContextLoaderListener 영역이다.
+        ContextLoaderListener 영역에 설정되는 모든 Servlet 이 참조할 수 있는 부모 Context(설정) 이다. -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/spring/root-context.xml</param-value>
+    </context-param>
+    
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+<!--    Dispatcher Servlet 관련 설정-->
+<!--    Dispatcher Servlet : 클라이언트 요청을 받아서 처리하는 객체-->
+<!--    Dispatcher Servlet 이 사용자 요청을 받아서 처리하는 과정 :
+        1. 클라이언트 요청을 처리할 Controller 객체를 찾는다.
+         -> HandlerMapping 이라는 객체가 사용자 요청에 해당하는 URL 로 매핑 되어있는 메소드를 소유하고 있는 Controller 객체를 찾아서
+          Dispatcher Servlet 에게 리턴한다. /test url 로 요청을 보내게 되면,
+         @RequestMapping, @PostMapping, @GetMapping 으로 '/test' 로 url 매핑된 메소드를 소유한 Controller 객체를 찾아서
+         Dispatcher Servlet 에게 리턴한다.
+
+        2. HandlerMapping 객체가 찾은 Controller 객체에 요청 url 이
+         @RequestMapping, @PostMapping, @GetMapping 으로 매핑되어 있는 메소드를 실행한다.
+        HandlerAdapter 라는 객체가 이 역할을 한다. Controller 의 메소드가 실행되면 개발자가 구현한 비즈니스 로직들이 실행되고,
+        응답 데이터를 추출해서 응답 데이터와 리턴될 화면(View) 를 HandlerAdapter 에게 리턴한다.
+        HandlerAdapter 는 리턴받은 데이터와 화면(view)를 ModelAndView 객체로 만들어서 Dispatcher Servlet 에게 전달한다.
+
+        3. 여기서 화면(view)는 브라우저에 표출될 화면 파일(.jsp , .html) 이다.
+        지정된 화면 파일 이름에 해당되는 파일을 찾는 역할은 ViewResolver 객체가 처리한다.
+
+        4. 그래서 DispatcherServlet 은 각각의 객체들을 이용해서 사용자의 요청을 처리하고,
+        최종적으로는 ModelAndView 객체를 사용자에게 리턴 해 주게 된다.
+        -->
+    <servlet>
+        <servlet-name>appServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>appServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+<!--    filter 관련 설정-->
+<!--    사용자가 보낸 요청을 DispatcherServlet 이 처리하기 전에 거치는 객체가 filter 객체이다.
+        스프링 시큐리티 필터가 적용되어 있다면, 인가 및 인증이 먼저 처리되고,
+        인코딩 필터가 적용되어 있다면, 클라이언트에서 넘어온 데이터가 인코딩 필터를 먼저 거쳐
+        인코딩 작업이 먼저 처리 된 후에 DispatcherServlet 에게 인코딩된 데이터가 전달된다.
+-->
+    <filter>
+        <filter-name>characterEncoding</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param><!--생성자에 파라미터로 넣어줄 변수 명 / 키와 값을 넣어주라는 뜻-->
+            <param-name>encoding</param-name> <!--CharacterEncodingFilter 클래스에 지정한 변수명과 똑같이 지어주어야됨-->
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>characterEncoding</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+</web-app>

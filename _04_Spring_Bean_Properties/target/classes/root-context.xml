@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   필요한 엘리먼트를 사용하기 위한 namespace 추가하는 부분
+xmlns : 키워드 => 키워드로 엘리먼트를 생성한다.
+xsi : schemaLocation 에서 namespace 를 사용하기 위한 설정파일인 xsd 파일을 링크를 걸어줘야 namespace 를 사용할 수 있는 상태가 된다.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--    ContextLoaderListener 객체에서 사용하는 설정파일
+                web.xml 을 읽으면서 제일 먼저 불러오는 설정파일이다.
+                프로젝트에서 전반적으로 사용되는 자원(DB 커넥션, 트렌잭션 처리, 파일 업로드 등)을 생성하고 설정.
+                bean 엘리먼트로 객체를 설정해서 스프링 컨테이너에 등록할 수 있는 설정도 할 수 있음.
+    -->
+
+    <!--
+    root-context.xml, servlet-context.xml 파일을 읽어서 스프링 컨테이너를 구동할 때
+    bean 엘리먼트로 등록되어 있는 클래스들은 객체로 자동 생성하여 bean 객체로 등록한다.
+    일반적으로 개발자가 작성한 클래스들은 설정파일에 bean 엘리먼트에 등록하지 않고
+    라이브러리(jar) 파일안에 있는 클래스들을 주로 bean 엘리먼트로 등록한다.
+    개발자가 작성한 클래스들은 어노테이션을 달 수 있지만, jar 파일 안에 있는 클래스들은
+    개발자들이 수정할 수 없기 때문에 어노테이션을 달 수 없어서 설정파일에 bean 엘리먼트로 등록해
+    객체를 생성하도록 한다.
+    bean 엘리먼트나 어노테이션을 통해 생성되는 객체는 싱글톤 패턴. 하나의 객체를 공유해 사용하는 방식이다.
+    -->
+<!--    IOC(Inversion Of Controll, 제어의 역전) : 개발자가 직접 하던 객체 생성,
+                                        의존성 주입 등을 스프링 설정 파일을 통해 스프링 프레임워크에 위임
+-->
+<!--    bean 엘리먼트에 등록된 클래스 들은 스프링 컨테이너가 구동되며 객체를 자동 생성 한다. -->
+    <!-- init-method: bean 객체 생성시 동작할 메소드를 지정하는 속성 -->
+    <!-- destroy-method: bean 객체 삭제시 동작할 메소드를 지정하는 속성 -->
+    <!-- lazy-init: bean 객체의 생성 시점을 지정하는 속성. 기본값은 false 로 스프링 컨테이너 구동시
+                    객체 생성. true 로 지정시 DL 시에 객체가 생성된다. -->
+    <!-- scope : 객체 생성 방식 지정. 기본 값으로 singleton 이 지정되어 하나의 객체만 생성해 공유해서 사용.
+                prototype 으로 지정 시 DL 시에 계속해서 객체 생성
+    -->
+    <bean id="KiaCar" class="com.bit.springboard.coupling.KiaCar"
+    init-method="initMethod" destroy-method="destroyMethod"
+     />
+
+    <bean id="HyundaiCar" class="com.bit.springboard.coupling.HyundaiCar"
+    init-method="initMethod" destroy-method="destroyMethod"
+    lazy-init="false"/>
+
+</beans>

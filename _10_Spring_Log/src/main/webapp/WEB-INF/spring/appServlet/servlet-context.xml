@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <!--web.xml파일에서 DispatcherServlet 설정부분에서 읽어드리는 설정 파일로 servlet 각각에 대한 설정을 지정한다.
+        Controller(url관련), Annotation, ViewResolver, Interceptor 등의 설정을 작성한다.
+        spring 설정 파일의 동작순서는 Web Application이 구동되면서 web.xml을 읽어드리고 web.xml에서 root-context.xml파일을 읽어드려서
+        첫 번째 부모 Spring Container를 구동하고 그 다음 DispatcherServlet 관련 설정을 읽으면서 그 안에 지정된 servlet-context.xml파일을
+        읽어서 두 번째 자식 Spring Container를 구동한다.
+        servlet-context에 해당하는 container가 나중에 구동되기 때문에 root-context container에 있는 설정이나 bean 객체를 사용할 수 있지만
+        먼저 구동되는 부모 컨테이너(root-context)에서는 자식 컨테이너(servlet-context)의 설정이나 bean 객체는 사용할 수 없다.
+    -->
+    <!--Spring Annotation 활성화-->
+    <mvc:annotation-driven/>
+
+    <!--정적 리소스에 대한 접근 허용
+        기본적으로 Spring에서는 정적 리소스에 대한 접근을 막고 있기 때문에 이 설정을 통해
+        html, js, css, 이미지 파일등 정적 파일에 대한 접근을 풀어 줄 수 있다.
+        web서버에서 기본적으로 rootpath가 webapp 폴더로 잡혀있다.
+    -->
+<!--    <mvc:resources mapping="/resources/**" location="/resources/"></mvc:resources>-->
+    <mvc:resources mapping="/**" location="/static/"></mvc:resources>
+
+    <!--DispatcherServlet에서 사용할 ViewResolver 객체 설정-->
+    <!--Controller에서 String이나 ModelAndView 객체를 리턴해주면 ViewResolver가 동작하여 리턴된 문자열이나 ModelAndView객체에
+    지정된 ViewName에 해당하는 화면을 찾아주는데 prefix로 지정된 문자열이 앞에 붙고, suffix로 지정된 문자열이 뒤에 붙어서
+    하나의 View 파일을 찾아서 DispatcherServlet으로 리턴한다.
+    prefix가 /WEB-INF/views/ 이고 suffix가 .jsp라면
+    리턴된 문자열이 board/post => /WEB-INF/views/board/post.jsp 파일을 찾아서 리턴한다.-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!--setter 메소드를 이용한 의존성 주입-->
+        <property name="prefix" value="/WEB-INF/views/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+
+    <!--Spring에서는 bean 엘리먼트 말고도 annotation으로도 bean 객체를 생성해서 등록할 수 있는데
+    @Component, @Controller, @Service, @Repository 등으로도 bean 객체를 생성해서 등록할 수 있다.
+    어노테이션들을 읽어서 bean 객체를 생성하고 등록하는 설정
+    context:component-scan 이설정은 기본적으로 @Coponent 어노테이션을 읽어서 bean객체를 생성하는데
+    @Controller, @Service, @Repository가 @Component를 포함하고 있기 때문에 context:component-scan에서 읽어서 bean 객체를 생성한다.
+    base-packge 속성으로 @Component, @Controller, @Service, @Repository 어노테이션들이 붙어있는 클래스를 찾을 패키지 지정-->
+    <context:component-scan base-package="com.bit.springboard"/>
+
+
+
+
+
+
+
+
+</beans>

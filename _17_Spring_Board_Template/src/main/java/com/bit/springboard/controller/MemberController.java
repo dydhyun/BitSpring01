@@ -7,8 +7,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping("/member") // 컨트롤러 자체를 member 폴더로 매핑해 -> ( member/join.do -> join.do )로 바꾸어 줄 수 있다.
-public class memberController {
-//    @RequestMapping(value = "/member/join.do", method = RequestMethod.GET) == @GetMapping("/member/join.do");
+public class MemberController {
+
+//    @RequestMapping(value = "/member/join.do", method = RequestMethod.GET)
+//    ==
+//    @GetMapping("/member/join.do");
+
     // 같은 방식이다
     @RequestMapping(value = "/join.do", method = RequestMethod.GET)
     public String joinView(){

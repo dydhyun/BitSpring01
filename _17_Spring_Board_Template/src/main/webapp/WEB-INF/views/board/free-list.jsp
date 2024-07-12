@@ -155,7 +155,7 @@
             </nav>
 
             <div class="container mt-3 mb-5 w-50 d-flex justify-content-end">
-                <button type="button" class="btn btn-outline-secondary" onclick="location.href='post.html'">글 등록</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href='/board/post.do'">글 등록</button>
             </div>
         </main>
 
@@ -165,7 +165,7 @@
     <script>
         $(() => {
             $(".board-tr").on("click", (e) => {
-                window.location.href = "free-detail.html";
+                window.location.href = "/board/free-detail.do";
             })
         });
     </script>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--필요한 엘리먼트들을 사용하기 위한 namesapce 추가하는 부분
+xmlns:키워드 => 키워드로 엘리먼트를 생성한다.
+xsi:schemaLocation에서 namespace를 사용하기 위한 설정파일인 xsd파일을 링크를 걸어줘야 namespace를 사용할 수 있는 상태가 된다.-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--ContextLoaderListener 객체에서 사용하는 설정파일
+        web.xml을 읽으면서 제일 먼저 불러오는 설정파일이다.
+        프로젝트에서 전반적으로 사용되는 자원(DB커넥션, 트랜잭션처리, 파일업로드 등)을 생성하고 설정.
+        bean 엘리먼트로 객체를 생성해서 스프링 컨테이너에 등록할 수 있는 설정도 할 수 있다.
+    -->
+
+</beans>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--쿼리문이 Dao 클래스에서 분리되어 온 것이기 때문에,
+ namespace 는 관례적으로 Dao 클래스 명과 일치 시킨다.-->
+<!--
+    type alias 에 의해 com.bit.~~~ 가 아닌 별칭을 준 board 로 줄 수 있다.
+    mybatis 에서는 매개변수를 꺼내올 때 #{변수명} 으로 꺼내온다.
+-->
+<mapper namespace="NoticeBoardDao">
+    <insert id="Post" parameterType="board">
+        INSERT INTO NOTICE(TITLE, CONTENT, WRITER_ID)
+        VALUES ( #{title}, #{content}, #{WRITER_ID} )
+    </insert>
+
+    <update id="Modify" parameterType="board">
+        UPDATE NOTICE SET TITLE = #{title}, CONTENT = #{content}, MODDATE = #{moddate}
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="DELETE" parameterType="int">
+        DELETE FROM NOTICE
+        WHERE ID = #{id}
+    </delete>
+
+    <select id="getBoardList" resultType="board">
+        SELECT n.ID, n.TITLE, n.CONTENT, n.WRITER_ID, m.NICKNAME, n.REGDATE, n.MODDATE, n.CNT
+        FROM NOTICE n
+        JOIN MEMBER m
+        ON n.WRITER_ID = m.ID
+    </select>
+
+    <select id="getBoard" parameterType="int" resultType="board">
+        SELECT n.ID, n.TITLE, n.CONTENT, n.WRITER_ID, m.NICKNAME, n.REGDATE, n.MODDATE, n.CNT
+        FROM NOTICE n
+        JOIN MEMBER m
+        ON n.WRITER_ID = m.ID
+        WHERE n.ID = #{id}
+    </select>
+
+</mapper>
+
+<!--        NoticeBoardDao 에서 작성했던 쿼리문 들을 notice-mapper.xml 에서 정의해서 사용하자-->
+
+<!--        // NoticeBoard 게시글 작성하기-->
+<!--        private final String POST = "INSERT INTO Notice(TITLE, CONTENT, WRITER_ID) VALUES(?,?,?)";-->
+
+<!--        // NoticeBoard 게시글 수정하기-->
+<!--        private final String MODIFY = "UPDATE Notice SET TITLE = ?, CONTENT = ?, MODDATE = ? WHERE ID = ?";-->
+
+<!--        // NoticeBoard 게시글 삭제-->
+<!--        private final String DELETE = "DELETE FROM Notice WHERE ID = ?";-->
+
+<!--        // 게시글 전체 불러오기-->
+<!--        private final String GET_NOTICE_LIST = "SELECT Notice.ID, Notice.TITLE, Notice.CONTENT,Notice.WRITER_ID, member.NICKNAME, Notice.REGDATE, Notice.MODDATE, Notice.CNT " +-->
+<!--        "FROM Notice " +-->
+<!--        "join member " +-->
+<!--        "on Notice.WRITER_ID = member.ID";-->
+
+<!--        // 게시글 하나 찝어서 보기-->
+<!--        private final String GET_ONE_NOTICE = "SELECT" +-->
+<!--        " notice.ID," +-->
+<!--        " notice.TITLE," +-->
+<!--        " notice.CONTENT," +-->
+<!--        "notice.WRITER_ID," +-->
+<!--        " member.NICKNAME," +-->
+<!--        " notice.REGDATE," +-->
+<!--        " notice.MODDATE," +-->
+<!--        " notice.CNT" +-->
+<!--        "   FROM notice" +-->
+<!--        "   join member" +-->
+<!--        "   on notice.WRITER_ID = member.ID" +-->
+<!--        "   WHERE notice.id = ?";-->

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--쿼리문이 Dao 클래스에서 분리되어 온 것이기 때문에,
+ namespace 는 관례적으로 Dao 클래스 명과 일치 시킨다.-->
+<!--
+    type alias 에 의해 com.bit.~~~ 가 아닌 별칭을 준 board 로 줄 수 있다.
+    mybatis 에서는 매개변수를 꺼내올 때 #{변수명} 으로 꺼내온다.
+-->
+<mapper namespace="FreeBoardDao">
+    <insert id="post" parameterType="board">
+        INSERT INTO FREEBOARD(TITLE, CONTENT, WRITER_ID)
+        VALUES ( #{title}, #{content}, #{WRITER_ID} )
+    </insert>
+
+    <update id="modify" parameterType="board">
+        UPDATE FREEBOARD SET TITLE = #{title}, CONTENT = #{content}, MODDATE = #{moddate}
+        WHERE ID = #{id}
+    </update>
+
+    <select id="getBoardList" resultType="board">
+        SELECT f.ID, f.TITLE, f.CONTENT, f.WRITER_ID, m.NICKNAME, f.REGDATE, f.MODDATE, f.CNT
+        FROM FREEBOARD f
+        JOIN MEMBER m
+        ON f.WRITER_ID = m.ID
+    </select>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM FREEBOARD
+        WHERE ID = #{id}
+    </delete>
+
+    <select id="getBoard" parameterType="int" resultType="board">
+        SELECT f.ID, f.TITLE, f.CONTENT, f.WRITER_ID, m.NICKNAME, f.REGDATE, f.MODDATE, f.CNT
+        FROM FREEBOARD f
+        JOIN MEMBER m
+        ON f.WRITER_ID = m.ID
+        WHERE f.ID = #{id}
+    </select>
+
+</mapper>

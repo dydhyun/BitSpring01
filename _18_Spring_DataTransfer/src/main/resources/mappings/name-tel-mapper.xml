@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="NameTelDao">
+<!--    <insert id="postNameTel" parameterType="com.bit.springboard.dto.NameTelDto">-->
+    <insert id="postNameTel" parameterType="nameTelDto">
+        INSERT INTO NAME_TEL(NAME, TEL)
+        VALUES (#{name}, #{tel});
+    </insert>
+
+    <select id="getNameTelList" resultType="nameTelDto">
+        SELECT NAME, TEL
+        FROM NAME_TEL;
+    </select>
+</mapper>

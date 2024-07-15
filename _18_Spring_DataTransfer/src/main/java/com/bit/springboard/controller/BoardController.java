@@ -7,16 +7,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/board")
 public class BoardController {
+
     @GetMapping("free-list.do")
     public String freeListView() {
         return "board/free-list";
     }
 
     /*
-    * https://itcoin.tistory.com/694
-    * 기본 동작으로 / 를 붙여준다
-    * 블로그 참고하기
-    */
+     * https://itcoin.tistory.com/694
+     * 기본 동작으로 / 를 붙여준다
+     * 블로그 참고하기
+     */
 
 
     @GetMapping("free-detail.do")

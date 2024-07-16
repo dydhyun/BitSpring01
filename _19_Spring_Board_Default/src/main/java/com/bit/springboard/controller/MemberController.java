@@ -35,11 +35,13 @@ public class MemberController {
     }
 
     @PostMapping("/usernameCheck.do")
+    // ***********************************************************************
     // Controller 메서드에서 String 을 리턴하면 해당 String 으로 jsp 파일을 찾게된다.
     // jsp 파일 자체가 response(응답객체)의 body 에 담겨서 리턴되는데,
     // 리턴할 값을 response(응답객체)의 body 에 담아주려면
     // @ResponseBody 어노테이션을 사용한다.
-    // @ResponseBody 어노테이션이 달려있는 메서드는 viewResolver 가 동작하지 않는다.//
+    // @ResponseBody 어노테이션이 달려있는 메서드는 viewResolver 가 동작하지 않는다.
+    // ***********************************************************************
     @ResponseBody
     public String userNameCheck(MemberDto memberDto){
         System.out.println(memberService.userNameCheck(memberDto.getUsername()));

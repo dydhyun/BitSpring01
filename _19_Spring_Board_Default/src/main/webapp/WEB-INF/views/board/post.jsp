@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <html>
 <head>
 </head>
@@ -19,21 +20,28 @@
                 <h4>글 등록</h4>
             </div>
             <div class="container mt-3 w-50">
-                <form id="insertForm" action="#">
-                    <div class="form-group">
-                        <label for="boardCategory">카테고리</label>
-                        <select class="form-select" name="boardCategory" id="boardCategory">
-                            <option value="free" selected>자유게시판</option>
-                            <option value="notice">공지사항</option>
-                        </select>
-                    </div>
+                <form id="post-form" action="/board/post.do" method="post">
+
+                    <c:if test="${loginMember.role eq 'ADMIN'}">
+                        <div class="form-group">
+                            <label for="type">카테고리</label>
+                            <select class="form-select" name="type" id="type">
+                                <option value="free" selected>자유게시판</option>
+                                <option value="notice">공지사항</option>
+                            </select>
+                        </div>
+                    </c:if>
+<%--
+선택한 옵션의 벨류 값 (free/notice) 이 BoardController.class의 postView 메서드의 getType()으로 넘어간다.
+--%>
                     <div class="form-group mt-3">
                         <label for="title">제목</label>
                         <input type="text" class="form-control" id="title" name="title" required>
                     </div>
                     <div class="form-group mt-3">
-                        <label for="writer">작성자</label>
-                        <input type="text" class="form-control" id="writer" name="writer" required>
+                        <label for="nickname">작성자</label>
+                        <input type="text" class="form-control" id="nickname" name="nickname"
+                            value="${loginMember.nickname}" readonly required>
                     </div>
                     <div class="form-group mt-3">
                         <label for="content">내용</label>

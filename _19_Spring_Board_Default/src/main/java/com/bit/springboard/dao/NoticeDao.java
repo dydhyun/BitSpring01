@@ -51,4 +51,10 @@ public class NoticeDao {
 
         return mybatis.selectOne("NoticeDao.getNotice", id);
     }
+
+    public void cntUp(BoardDto boardDto){
+        System.out.println("Dao에서 cntUp실행" + boardDto.getCnt());
+        System.out.println(boardDto.getCnt());
+        mybatis.update("NoticeDao.cntUp", boardDto);
+    }
 }

@@ -19,35 +19,35 @@ public class FreeBoardDao {
         this.mybatis = sqlSessionTemplate;
     }
 
-    private final String GET_BOARD_LIST = "SELECT F.ID" +
-            "                                   , F.TITLE" +
-            "                                   , F.CONTENT" +
-            "                                   , F.WRITER_ID" +
-            "                                   , M.NICKNAME" +
-            "                                   , F.REGDATE" +
-            "                                   , F.MODDATE" +
-            "                                   , F.CNT" +
-            "                                  FROM FREEBOARD F" +
-            "                                  JOIN MEMBER M" +
-            "                                    ON F.WRITER_ID = M.ID";
-
-    // 게시글 삭제
-    private final String DELETE = "DELETE FROM FREEBOARD" +
-            "                           WHERE ID = ?";
-
-    // 특정 id의 게시글 하나만 조회
-    private final String GET_BOARD = "SELECT F.ID" +
-            "                                   , F.TITLE" +
-            "                                   , F.CONTENT" +
-            "                                   , F.WRITER_ID" +
-            "                                   , M.NICKNAME" +
-            "                                   , F.REGDATE" +
-            "                                   , F.MODDATE" +
-            "                                   , F.CNT" +
-            "                                  FROM FREEBOARD F" +
-            "                                  JOIN MEMBER M" +
-            "                                    ON F.WRITER_ID = M.ID" +
-            "                                  WHERE F.ID = ?";
+//    private final String GET_BOARD_LIST = "SELECT F.ID" +
+//            "                                   , F.TITLE" +
+//            "                                   , F.CONTENT" +
+//            "                                   , F.WRITER_ID" +
+//            "                                   , M.NICKNAME" +
+//            "                                   , F.REGDATE" +
+//            "                                   , F.MODDATE" +
+//            "                                   , F.CNT" +
+//            "                                  FROM FREEBOARD F" +
+//            "                                  JOIN MEMBER M" +
+//            "                                    ON F.WRITER_ID = M.ID";
+//
+//    // 게시글 삭제
+//    private final String DELETE = "DELETE FROM FREEBOARD" +
+//            "                           WHERE ID = ?";
+//
+//    // 특정 id의 게시글 하나만 조회
+//    private final String GET_BOARD = "SELECT F.ID" +
+//            "                                   , F.TITLE" +
+//            "                                   , F.CONTENT" +
+//            "                                   , F.WRITER_ID" +
+//            "                                   , M.NICKNAME" +
+//            "                                   , F.REGDATE" +
+//            "                                   , F.MODDATE" +
+//            "                                   , F.CNT" +
+//            "                                  FROM FREEBOARD F" +
+//            "                                  JOIN MEMBER M" +
+//            "                                    ON F.WRITER_ID = M.ID" +
+//            "                                  WHERE F.ID = ?";
 
     public void post(BoardDto boardDto) {
         System.out.println("FreeBoardDao의 post 메소드 실행");
@@ -70,7 +70,7 @@ public class FreeBoardDao {
 
         List<BoardDto> boardDtoList = new ArrayList<>();
 
-        // SqlSessionTemplate의 selectList메소드 사용
+        // SqlSessionTemplate 의 selectList 메서드 사용
         boardDtoList = mybatis.selectList("FreeBoardDao.getBoardList");
 
         System.out.println("FreeBoardDao의 getBoardList 메소드 실행 종료");
@@ -95,5 +95,10 @@ public class FreeBoardDao {
 
         System.out.println("FreeBoardDao의 getBoard 메소드 실행 종료");
         return boardDto;
+    }
+
+    public void cntUp(BoardDto boardDto){
+        System.out.println("freeboardDao cnt: " + boardDto.getCnt());
+        mybatis.update("FreeBoardDao.cntUp", boardDto);
     }
 }

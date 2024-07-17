@@ -11,7 +11,11 @@
         ) VALUES (
             #{title},
             #{content},
-            #{WRITER_ID}
+            (
+                SELECT M.ID
+                FROM MEMBER M
+                WHERE M.NICKNAME = #{nickname}
+            )
         )
     </insert>
 
@@ -22,6 +26,19 @@
                 CONTENT = #{content},
                 MODDATE = #{moddate}
             WHERE ID = #{id}
+    </update>
+
+<!--    <update id="cntUp" parameterType="board">-->
+<!--        UPDATE NOTICE-->
+<!--        SET-->
+<!--            CNT = #{cnt}-->
+<!--        WHERE ID = #{id}-->
+<!--    </update>-->
+    <update id="cntUp" parameterType="board">
+        UPDATE NOTICE
+        SET
+            CNT = CNT+1
+        WHERE ID = #{id}
     </update>
 
     <select id="getNoticeList" resultType="board">

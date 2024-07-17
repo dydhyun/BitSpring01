@@ -14,4 +14,6 @@ public interface BoardService {
     List<BoardDto> getBoardList();
 
     BoardDto getBoard(int id);
+
+    void cntUp(BoardDto boardDto);
 }

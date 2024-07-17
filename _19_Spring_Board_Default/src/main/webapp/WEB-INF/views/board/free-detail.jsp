@@ -6,6 +6,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="javatime" uri="http://sargue.net/jsptags/time" %>
 <html>
 <head>
 </head>
@@ -19,30 +21,37 @@
                 <h4>자유게시글 상세</h4>
             </div>
             <div class="container mt-3 w-50">
-                <form id="updateForm" action="#" method="post">
+                <form id="modify-form" action="/board/modify.do" method="post">
+<%--submit 될 때 id 값이 없으면 0번 게시물에 대한 처리를 하기 때문에 id 값을 넣어 수정할 게시물을 지정해줄 수 있다--%>
+                    <input type="hidden" name="id" value="${freeBoardInfo.id}">
+                    <input type="hidden" name="type" value="free">
                     <div class="form-group">
                         <label for="title">제목</label>
-                        <input type="text" class="form-control" id="title" name="title" value="게시글" required>
+                        <input type="text" class="form-control" id="title" name="title" value="${freeBoardInfo.title}" required>
                     </div>
                     <div class="form-group mt-3">
-                        <label for="writer">작성자</label>
-                        <input type="text" class="form-control" id="writer" name="writer" value="사용자1" readonly>
+                        <label for="nickname">작성자</label>
+                        <input type="text" class="form-control" id="nickname" name="nickname" value="${freeBoardInfo.nickname}" readonly>
                     </div>
                     <div class="form-group mt-3">
                         <label for="content">내용</label>
-                        <textarea class="form-control" id="content" name="content" rows="10" required>게시글</textarea>
+                        <textarea class="form-control" id="content" name="content" rows="10" required>
+${freeBoardInfo.content}
+                        </textarea>
                     </div>
                     <div class="form-group mt-3">
                         <label for="regdate">등록일</label>
-                        <input type="text" class="form-control" id="regdate" name="regdate" value="2024-06-28" required>
+                        <input type="text" class="form-control" id="regdate"
+                               value="<javatime:format value="${freeBoardInfo.regdate}" pattern="yyyy-MM-dd"/>" readonly required>
                     </div>
                     <div class="form-group mt-3">
                         <label for="moddate">수정일</label>
-                        <input type="text" class="form-control" id="moddate" name="moddate" value="2024-06-28" required>
+                        <input type="text" class="form-control" id="moddate"
+                               value="<javatime:format value="${freeBoardInfo.moddate}" pattern="yyyy-MM-dd"/>" readonly required>
                     </div>
                     <div class="form-group mt-3">
                         <label for="cnt">조회수</label>
-                        <input type="text" class="form-control" id="cnt" name="cnt" value="0" required>
+                        <input type="text" class="form-control" id="cnt" name="cnt" value="${freeBoardInfo.cnt}" readonly required>
                     </div>
                     <div class="form-group mt-3">
                         <label for="uploadFiles">파일첨부</label>
@@ -58,10 +67,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="container mt-3 mb-5 w-50 text-center">
-                        <button type="submit" id="btn-update" class="btn btn-outline-secondary">수정</button>
-                        <button type="button" id="btn-delete" class="btn btn-outline-secondary ml-2" onclick="location.href='/board/deleteBoard.do?boardNo=${getBoard.boardNo}'">삭제</button>
-                    </div>
+
+                    <c:if test="${loginMember ne null and loginMember.id eq freeBoardInfo.WRITER_ID}">
+                        <div class="container mt-3 mb-5 w-50 text-center">
+                            <button type="submit" id="btn-update" class="btn btn-outline-secondary">수정</button>
+                            <button type="button" id="btn-delete" class="btn btn-outline-secondary ml-2" onclick="location.href='/board/delete.do?id=${freeBoardInfo.id}&type=free'">삭제</button>
+                        </div>
+                    </c:if>
+
                 </form>
             </div>
         </main>

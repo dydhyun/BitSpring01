@@ -53,7 +53,7 @@
     </select>
 
     <select id="login" parameterType="member" resultType="member">
-        SELECT ID, USERNAME, PASSWORD, EMAIL, NICKNAME, TEL
+        SELECT ID, USERNAME, PASSWORD, EMAIL, NICKNAME, TEL, ROLE
         FROM MEMBER
         WHERE USERNAME = #{username} AND PASSWORD = #{password};
     </select>

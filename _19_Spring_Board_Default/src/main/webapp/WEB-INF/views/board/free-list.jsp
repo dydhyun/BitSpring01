@@ -6,6 +6,11 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%--jstl uri=버전에따라 변동이있음--%>
+<%--<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>--%>
+<%--날짜 형식 잘 변환해주기 위해 끌어쓰는 라이브러리--%>
+<%@ taglib prefix="javatime" uri="http://sargue.net/jsptags/time" %>
 <html>
 <head>
 </head>
@@ -46,85 +51,29 @@
             <div class="container mt-3 mb-5 w-50">
                 <table class="table table-hover text-center">
                     <thead>
-                    <tr>
-                        <th>번호</th>
-                        <th>제목</th>
-                        <th>작성자</th>
-                        <th>등록일</th>
-                        <th>조회수</th>
-                    </tr>
+                        <tr>
+                            <th>번호</th>
+                            <th>제목</th>
+                            <th>작성자</th>
+                            <th>등록일</th>
+                            <th>조회수</th>
+                        </tr>
                     </thead>
                     <tbody class="table-group-divider">
-                    <tr class="board-tr">
-                        <td>1</td>
-                        <td>게시글1</td>
-                        <td>작성자1</td>
-                        <td>2024-06-25</td>
-                        <td>1</td>
-                    </tr>
-                    <tr class="board-tr">
-                        <td>2</td>
-                        <td>게시글2</td>
-                        <td>작성자2</td>
-                        <td>2024-06-25</td>
-                        <td>2</td>
-                    </tr>
-                    <tr class="board-tr">
-                        <td>3</td>
-                        <td>게시글3</td>
-                        <td>작성자3</td>
-                        <td>2024-06-25</td>
-                        <td>3</td>
-                    </tr>
-                    <tr class="board-tr">
-                        <td>4</td>
-                        <td>게시글4</td>
-                        <td>작성자4</td>
-                        <td>2024-06-25</td>
-                        <td>4</td>
-                    </tr>
-                    <tr class="board-tr">
-                        <td>4</td>
-                        <td>게시글4</td>
-                        <td>작성자4</td>
-                        <td>2024-06-25</td>
-                        <td>4</td>
-                    </tr>
-                    <tr class="board-tr">
-                        <td>4</td>
-                        <td>게시글4</td>
-                        <td>작성자4</td>
-                        <td>2024-06-25</td>
-                        <td>4</td>
-                    </tr>
-                    <tr class="board-tr">
-                        <td>4</td>
-                        <td>게시글4</td>
-                        <td>작성자4</td>
-                        <td>2024-06-25</td>
-                        <td>4</td>
-                    </tr>
-                    <tr class="board-tr">
-                        <td>4</td>
-                        <td>게시글4</td>
-                        <td>작성자4</td>
-                        <td>2024-06-25</td>
-                        <td>4</td>
-                    </tr>
-                    <tr class="board-tr">
-                        <td>4</td>
-                        <td>게시글4</td>
-                        <td>작성자4</td>
-                        <td>2024-06-25</td>
-                        <td>4</td>
-                    </tr>
-                    <tr class="board-tr">
-                        <td>4</td>
-                        <td>게시글4</td>
-                        <td>작성자4</td>
-                        <td>2024-06-25</td>
-                        <td>4</td>
-                    </tr>
+                        <c:forEach items="${freeBoardList}" var="freeBoard">
+<%--                            상세 페이지 아이디로 조회하기위해 쿼리스트링으로 아이디 값을 보내줌--%>
+                            <tr class="board-tr" onclick="location.href='/board/free-detail.do?id=${freeBoard.id}&cnt=${freeBoard.cnt}'">
+                                <td>${freeBoard.id}</td>
+                                <td>${freeBoard.title}</td>
+                                <td>${freeBoard.nickname}</td>
+                                <td>
+<%--                                    <fmt:parseDate value="${freeBoard.regdate}" pattern="yyyy-MM-dd" var="parsedDate"/>--%>
+<%--                                    <fmt:formatDate value="${parsedDate}" pattern="yyyy-MM-dd"/>--%>
+                                    <javatime:format value="${freeBoard.regdate}" pattern="yyyy-MM-dd"/>
+                                </td>
+                                <td>${freeBoard.cnt}</td>
+                            </tr>
+                        </c:forEach>
                     </tbody>
                 </table>
             </div>
@@ -132,7 +81,6 @@
                 <ul class="pagination justify-content-center">
                     <li class="page-item">
                         <a class="page-link link-secondary" aria-label="Previous">
-                            &laquo;
                         </a>
                     </li>
 
@@ -148,26 +96,22 @@
 
                     <li class="page-item">
                         <a class="page-link link-secondary" aria-label="Next">
-                            &raquo;
                         </a>
                     </li>
                 </ul>
             </nav>
 
-            <div class="container mt-3 mb-5 w-50 d-flex justify-content-end">
-                <button type="button" class="btn btn-outline-secondary" onclick="location.href='/board/post.do'">글 등록</button>
-            </div>
+<%--            jstl의 if문, test에 조건을 넣어줌--%>
+            <c:if test="${loginMember ne null}">
+                <div class="container mt-3 mb-5 w-50 d-flex justify-content-end">
+                    <button type="button" class="btn btn-outline-secondary" onclick="location.href='/board/post.do'">글 등록</button>
+                </div>
+            </c:if>
         </main>
 
         <jsp:include page="${pageContext.request.contextPath}/footer.jsp"></jsp:include>
 
     </div>
-    <script>
-        $(() => {
-            $(".board-tr").on("click", (e) => {
-                window.location.href = "/board/free-detail.do";
-            })
-        });
-    </script>
+
 </body>
 </html>

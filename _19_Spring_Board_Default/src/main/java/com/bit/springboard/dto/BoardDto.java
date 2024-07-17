@@ -3,6 +3,7 @@ package com.bit.springboard.dto;
 import java.time.LocalDateTime;
 
 public class BoardDto {
+    private String type = "free";
     private int id;
     private String title;
     private String content;
@@ -11,6 +12,14 @@ public class BoardDto {
     private LocalDateTime regdate;
     private LocalDateTime moddate;
     private int cnt;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public int getId() {
         return id;

@@ -36,7 +36,7 @@
         WHERE ID = #{id}
     </update>
 
-    <select id="getBoardList" resultType="board">
+    <select id="getBoardList" parameterType="map" resultType="board">
         SELECT F.ID
              , F.TITLE
              , F.CONTENT
@@ -48,6 +48,30 @@
             FROM FREEBOARD F
             JOIN MEMBER M
               ON F.WRITER_ID = M.ID
+            WHERE 1=1
+--         mybatis 의 동적 쿼리 사용 어디에 WHERE 절이 들어갈지 특정할 수 없기 때문에 조건절만, AND 혹은 OR 로만 구성한다.
+
+        <if test="searchKeyword != null and searchKeyword != ''">
+            <if test="searchCondition == 'all'">
+--                 WHERE 1=0
+                AND ( F.TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
+                OR F.CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')
+                OR M.NICKNAME LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+            <if test="searchCondition == 'title'">
+--                 WHERE 1=1
+                AND F.TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+            <if test="searchCondition == 'content'">
+--                 WHERE 1=1
+                AND F.CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+            <if test="searchCondition == 'writer'">
+--                 WHERE 1=1
+                AND M.NICKNAME LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+
+        </if>
     </select>
 
     <delete id="delete" parameterType="int">

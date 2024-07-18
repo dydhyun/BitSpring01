@@ -23,24 +23,41 @@
             <div class="container mt-5 w-50">
                 <h4>자유게시판</h4>
             </div>
+
             <div class="container mt-3 w-50">
-                <form id="search-form" action="" method="post">
+                <form id="search-form" action="/board/free-list.do" method="post">
                     <div class="row">
                         <div class="col-3">
                             <select class="form-select" name="searchCondition">
-                                <option value="all" selected>전체</option>
-                                <option value="title">제목</option>
-                                <option value="content">내용</option>
-                                <option value="writer">작성자</option>
+                                <option value="all" <c:if test="${searchMap == 'null' || searchMap.searchCondition == 'all'}">
+                                        selected
+                                    </c:if>>
+                                    전체
+                                </option>
+                                <option value="title" <c:if test="${searchMap.searchCondition == 'title'}">
+                                        selected
+                                    </c:if>>
+                                    제목
+                                </option>
+                                <option value="content" <c:if test="${searchMap.searchCondition == 'content'}">
+                                        selected
+                                    </c:if>>
+                                    내용
+                                </option>
+                                <option value="writer" <c:if test="${searchMap.searchCondition == 'writer'}">
+                                        selected
+                                    </c:if>>
+                                    작성자
+                                </option>
                             </select>
                         </div>
                         <div class="col-9">
                             <div class="row">
                                 <div class="col-11">
-                                    <input type="text" class="form-control w-100" name="searchKeyword">
+                                    <input type="text" class="form-control w-100" name="searchKeyword" value="${searchMap.searchKeyword}">
                                 </div>
                                 <div class="col-1 d-flex align-items-center">
-                                    <i class="bi bi-search" id="searchIcon"></i>
+                                    <i class="bi bi-search" id="search-icon"></i>
                                     <button type="submit" id="btnSearch">검색</button>
                                 </div>
                             </div>
@@ -48,6 +65,7 @@
                     </div>
                 </form>
             </div>
+
             <div class="container mt-3 mb-5 w-50">
                 <table class="table table-hover text-center">
                     <thead>
@@ -62,7 +80,7 @@
                     <tbody class="table-group-divider">
                         <c:forEach items="${freeBoardList}" var="freeBoard">
 <%--                            상세 페이지 아이디로 조회하기위해 쿼리스트링으로 아이디 값을 보내줌--%>
-                            <tr class="board-tr" onclick="location.href='/board/free-detail.do?id=${freeBoard.id}&cnt=${freeBoard.cnt}'">
+                            <tr class="board-tr" onclick="location.href='/board/update-cnt.do?id=${freeBoard.id}&cnt=${freeBoard.cnt}&type=${freeBoard.type}'">
                                 <td>${freeBoard.id}</td>
                                 <td>${freeBoard.title}</td>
                                 <td>${freeBoard.nickname}</td>
@@ -112,6 +130,14 @@
         <jsp:include page="${pageContext.request.contextPath}/footer.jsp"></jsp:include>
 
     </div>
+
+<script>
+    $(() => {
+        $("#search-icon").on("click", (e) => {
+            $("#search-form").submit();
+        });
+    });
+</script>
 
 </body>
 </html>

@@ -53,6 +53,13 @@
             FROM NOTICE N
             JOIN MEMBER M
               ON N.WRITER_ID = M.ID
+--         mybatis 동적쿼리 사용하기
+         WHERE 1=1
+        <if test="searchKeyword != null and searchKeyword !=''">
+            AND ( N.TITLE LIKE CONCAT('%', ${searchKeyword}, '%')
+            OR N.CONTENT LIKE CONCAT('%', ${searchKeyword}, '%')
+            OR M.NICKNAME LIKE CONCAT('%', ${searchKeyword}, '%') )
+        </if>
     </select>
 
     <delete id="delete" parameterType="int">

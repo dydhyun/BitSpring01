@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class NoticeServiceImpl implements BoardService {
@@ -35,8 +36,8 @@ public class NoticeServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardDto> getBoardList() {
-        return noticeDao.getNoticeList();
+    public List<BoardDto> getBoardList(Map<String, String> searchMap) {
+        return noticeDao.getNoticeList(searchMap);
     }
 
     @Override

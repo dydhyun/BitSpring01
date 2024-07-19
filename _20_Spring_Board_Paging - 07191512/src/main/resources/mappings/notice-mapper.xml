@@ -91,7 +91,6 @@
                     OR M.NICKNAME LIKE CONCAT('%', #{searchKeyword}, '%')
                 )
             </if>
-        LIMIT #{cri.amount} OFFSET #{cri.startNum}
 
     </select>
 

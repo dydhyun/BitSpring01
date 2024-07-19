@@ -70,6 +70,10 @@
 
         <jsp:include page="${pageContext.request.contextPath}/footer.jsp"></jsp:include>
     </div>
+
+
+
+
     <script>
         $(() => {
             $("#search-icon").on("click", (e) => {
@@ -112,6 +116,8 @@
                             success: (obj) => {
                                 console.log(obj);
                                 let htmlStr = "";
+
+                                // BoardController 에서 url 에 매핑된 메서드의 returnMap 안에 넣어준 noticeList
                                 for (let i = 0; i < obj.noticeList.length; i++){
                                     htmlStr += `
                                         <div class="card" style="width: 18rem;">
@@ -125,7 +131,12 @@
                                     `;
                                 }
                                 console.log(htmlStr);
-                                $(".card-wrapper").html(htmlStr);
+                                // $(".card-wrapper").html(htmlStr);
+                                // 기존방식은 card-wrapper 클래스를 9 / 18 / 27 개의 obj 를 한번에 새로운 html 요소로 다시 로드 하는 방식
+                                $(".card-wrapper").append(htmlStr);
+                                // 스크롤이 바닥에 닿으면 (9개의 card 클래스를 넘어서면) 현재 페이지를 1 증가 시키고, 컨트롤러에 url 매핑된 메서드에서
+                                // 가져온 boardList 의 필드값을 넣은 새로운 card 를 최대 9개씩 화면에 더해서 보여준다.
+                                // 현재 페이지 번호가 마지막 페이지 (데이터베이스에 28개의 값이 들어가있기에) 4 에 도달하면 종료(리턴).
                             },
                             error: (err) => {
                                 console.log(err);

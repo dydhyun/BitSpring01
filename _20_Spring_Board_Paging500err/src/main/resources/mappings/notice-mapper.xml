@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="NoticeDao">
+    <insert id="post" parameterType="board">
+        INSERT INTO NOTICE(
+            TITLE,
+            CONTENT,
+            WRITER_ID
+        ) VALUES (
+            #{title},
+            #{content},
+            (
+                SELECT M.ID
+                FROM MEMBER M
+                WHERE M.NICKNAME = #{nickname}
+            )
+        )
+    </insert>
+
+    <update id="modify" parameterType="board">
+        UPDATE NOTICE
+            SET
+                TITLE = #{title},
+                CONTENT = #{content},
+                MODDATE = #{moddate}
+            WHERE ID = #{id}
+    </update>
+
+<!--    <update id="cntUp" parameterType="board">-->
+<!--        UPDATE NOTICE-->
+<!--        SET-->
+<!--            CNT = #{cnt}-->
+<!--        WHERE ID = #{id}-->
+<!--    </update>-->
+    <update id="cntUp" parameterType="board">
+        UPDATE NOTICE
+        SET
+            CNT = CNT+1
+        WHERE ID = #{id}
+    </update>
+
+    <select id="getNoticeList" resultType="board">
+        SELECT N.ID
+             , N.TITLE
+             , N.CONTENT
+             , N.WRITER_ID
+             , M.NICKNAME
+             , N.REGDATE
+             , N.MODDATE
+             , N.CNT
+            FROM NOTICE N
+            JOIN MEMBER M
+              ON N.WRITER_ID = M.ID
+--         mybatis 동적쿼리 사용하기
+         WHERE 1=1
+        <if test="search.searchKeyword != null and search.searchKeyword !=''">
+            AND ( N.TITLE LIKE CONCAT('%', ${search.searchKeyword}, '%')
+            OR N.CONTENT LIKE CONCAT('%', ${search.searchKeyword}, '%')
+            OR M.NICKNAME LIKE CONCAT('%', ${search.searchKeyword}, '%') )
+        </if>
+        LIMIT #{cri.amount}
+    </select>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM NOTICE
+            WHERE ID = #{id}
+    </delete>
+
+    <select id="getNotice" parameterType="int" resultType="board">
+        SELECT N.ID
+             , N.TITLE
+             , N.CONTENT
+             , N.WRITER_ID
+             , M.NICKNAME
+             , N.REGDATE
+             , N.MODDATE
+             , N.CNT
+            FROM NOTICE N
+            JOIN MEMBER M
+              ON N.WRITER_ID = M.ID
+            WHERE N.ID = #{id}
+    </select>
+    
+    
+    <select id="getBoardTotalCnt" parameterType="Map" resultType="int">
+        SELECT COUNT(*)
+        FROM NOTICE N
+        JOIN MEMBER M
+        ON N.WRITER_ID = M.ID
+        WHERE 1 = 1
+        <if test="searchKeyword != null and searchKeyword !=''">
+            AND(
+                N.TITLE LIKE CONCAT('%', #{searchKeyword},'%')
+                OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')
+                OR NICKNAME LIKE CONCAT('%', #{searchKeyword}, '%')
+            )
+        </if>
+    </select>
+</mapper>

@@ -12,11 +12,11 @@
         ) VALUES(
             #{title},
             #{content},
-                 (
-                     SELECT M.ID
-                     FROM MEMBER M
-                     WHERE M.NICKNAME = #{nickname}
-                )
+            (
+                SELECT M.ID
+                    FROM MEMBER M
+                    WHERE M.NICKNAME = #{nickname}
+            )
         )
     </insert>
 
@@ -27,13 +27,6 @@
                 CONTENT = #{content},
                 MODDATE = #{moddate}
             WHERE ID = #{id}
-    </update>
-
-    <update id="cntUp" parameterType="board">
-        UPDATE FREEBOARD
-        SET
-            CNT = CNT+1
-        WHERE ID = #{id}
     </update>
 
     <select id="getBoardList" parameterType="map" resultType="board">
@@ -48,30 +41,25 @@
             FROM FREEBOARD F
             JOIN MEMBER M
               ON F.WRITER_ID = M.ID
+        -- mybatis의 동적 쿼리 사용
             WHERE 1=1
---         mybatis 의 동적 쿼리 사용 어디에 WHERE 절이 들어갈지 특정할 수 없기 때문에 조건절만, AND 혹은 OR 로만 구성한다.
-
         <if test="search.searchKeyword != null and search.searchKeyword != ''">
             <if test="search.searchCondition == 'all'">
---                 WHERE 1=0
-                AND ( F.TITLE LIKE CONCAT('%', #{search.searchKeyword}, '%')
-                OR F.CONTENT LIKE CONCAT('%', #{search.searchKeyword}, '%')
-                OR M.NICKNAME LIKE CONCAT('%', #{search.searchKeyword}, '%'))
+               AND (F.TITLE LIKE CONCAT('%', #{search.searchKeyword}, '%')
+               OR F.CONTENT LIKE CONCAT('%', #{search.searchKeyword}, '%')
+               OR M.NICKNAME LIKE CONCAT('%', #{search.searchKeyword}, '%'))
             </if>
             <if test="search.searchCondition == 'title'">
---                 WHERE 1=1
                 AND F.TITLE LIKE CONCAT('%', #{search.searchKeyword}, '%')
             </if>
             <if test="search.searchCondition == 'content'">
---                 WHERE 1=1
                 AND F.CONTENT LIKE CONCAT('%', #{search.searchKeyword}, '%')
             </if>
             <if test="search.searchCondition == 'writer'">
---                 WHERE 1=1
                 AND M.NICKNAME LIKE CONCAT('%', #{search.searchKeyword}, '%')
             </if>
         </if>
-        LIMIT #{cri.amount} OFFSET ${cri.startNum}
+        LIMIT #{cri.amount} OFFSET #{cri.startNum}
     </select>
 
     <delete id="delete" parameterType="int">
@@ -94,26 +82,51 @@
             WHERE F.ID = #{id}
     </select>
 
+    <update id="updateCnt" parameterType="int">
+        UPDATE FREEBOARD
+            SET
+                CNT = CNT + 1
+            WHERE ID = #{id}
+    </update>
+
     <select id="getBoardTotalCnt" parameterType="map" resultType="int">
         SELECT COUNT(*)
-        FROM FREEBOARD F
-        JOIN MEMBER M ON F.WRITER_ID = M.ID
-        WHERE 1=1
-        <if test="searchKeyword != null and searchKeyword != ''">
-            <if test="searchCondition == 'all">
-                AND (
-                    F.TITLE LiKE CONCAT('%', #{searchKeyword}, '%')
-                    OR F.CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')
-                    OR F.NICKNAME LIKE CONCAT('%', #{searchKeyword}, '%')
-                )
+            FROM FREEBOARD F
+            JOIN MEMBER M
+              ON F.WRITER_ID = M.ID
+            WHERE 1=1
+            <if test="searchKeyword != null and searchKeyword != ''">
+                <if test="searchCondition == 'all'">
+                    AND (
+                        F.TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
+                        OR F.CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')
+                        OR M.NICKNAME LIKE CONCAT('%', #{searchKeyword}, '%')
+                    )
+                </if>
+                <if test="searchCondition == 'title'">
+                    AND F.TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
+                </if>
+                <if test="searchCondition == 'content'">
+                    AND F.CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')
+                </if>
+                <if test="searchCondition == 'writer'">
+                    AND M.NICKNAME LIKE CONCAT('%', #{searchKeyword}, '%')
+                </if>
             </if>
-            <if test="searchCondition == 'title">
-                AND F.TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
-            </if>
-            <if test="searchCondition == 'writer">
-                AND F.NICKNAME LIKE CONCAT('%', #{searchKeyword}, '%')
-            </if>
-        </if>
     </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </mapper>

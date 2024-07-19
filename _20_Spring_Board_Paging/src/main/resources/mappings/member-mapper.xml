@@ -39,23 +39,29 @@
             FROM MEMBER
             WHERE USERNAME = #{username}
     </select>
-
+    
     <select id="usernameCheck" parameterType="string" resultType="int">
         SELECT COUNT(*)
-        FROM MEMBER
-        WHERE USERNAME = #{username}
+            FROM MEMBER
+            WHERE USERNAME = #{username}
     </select>
 
-    <select id="nicknameCheck" parameterType="String" resultType="int">
+    <select id="nicknameCheck" parameterType="string" resultType="int">
         SELECT COUNT(*)
-        FROM MEMBER
-        WHERE NICKNAME = #{nickname}
+            FROM MEMBER
+            WHERE NICKNAME = #{nickname}
     </select>
 
     <select id="login" parameterType="member" resultType="member">
-        SELECT ID, USERNAME, PASSWORD, EMAIL, NICKNAME, TEL, ROLE
-        FROM MEMBER
-        WHERE USERNAME = #{username} AND PASSWORD = #{password};
+        SELECT ID
+             , USERNAME
+             , PASSWORD
+             , EMAIL
+             , NICKNAME
+             , TEL
+             , ROLE
+            FROM MEMBER
+            WHERE USERNAME = #{username}
+              AND PASSWORD = #{password}
     </select>
-
 </mapper>

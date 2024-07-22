@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!-- mybatis에서 사용하는 설정파일-->
+<configuration>
+    <!--객체들의 별칭 지정-->
+    <!--원래 Mapper에 parameterType이나 resultType에 패키지까지 포함된
+        전체 클래스 명을 작성해야되는데 별칭으로 지정하면
+        별칭만 사용해서 parameterType이나 resultType을 지정할 수 있다.-->
+    <typeAliases>
+        <typeAlias type="com.bit.springboard.dto.BoardDto"
+                   alias="board"/>
+        <typeAlias type="com.bit.springboard.dto.MemberDto"
+                   alias="member"/>
+        <typeAlias type="com.bit.springboard.dto.BoardFileDto"
+                   alias="boardFile"/>
+    </typeAliases>
+
+    <!--사용할 Sql Mapper 등록-->
+    <mappers>
+        <mapper resource="mappings/freeboard-mapper.xml"/>
+        <mapper resource="mappings/member-mapper.xml"/>
+        <mapper resource="mappings/notice-mapper.xml"/>
+    </mappers>
+</configuration>

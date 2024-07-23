@@ -61,7 +61,6 @@
                             </p>
                             <div id="preview" class="mt-3 text-center"
                                  data-placeholder="파일을 첨부하려면 파일선택 버튼을 누르세요.">
-
                                 <c:forEach items="${fileList}" var="file">
                                     <div class="upload-file-div">
                                         <c:choose>
@@ -69,27 +68,25 @@
                                                 <img id="img${file.id}"
                                                      class="upload-file"
                                                      src="/upload/${file.filename}"
-                                                     alt="${file.fileoriginname}"
+                                                     alt="${file.fileoriginname}">
                                             </c:when>
-
                                             <c:otherwise>
                                                 <img id="img${file.id}"
                                                      class="upload-file"
                                                      src="/static/images/defaultFileImg.png"
-                                                     alt="${file.fileoriginname}"
+                                                     alt="${file.fileoriginname}">
                                             </c:otherwise>
-
                                         </c:choose>
                                         <input type="button"
-                                        class="upload-file-delete-btn"
-                                        value="x"
-                                        deleteFile="${file.id}">
-                                        <p id="filenames${file.id}" class="upload-file-name">
+                                                class="upload-file-delete-btn"
+                                                value="x"
+                                                deleteFile="${file.id}">
+                                        <p id="filename${file.id}"
+                                           class="upload-file-name">
                                             ${file.fileoriginname}
                                         </p>
                                     </div>
                                 </c:forEach>
-
                             </div>
                         </div>
                     </div>

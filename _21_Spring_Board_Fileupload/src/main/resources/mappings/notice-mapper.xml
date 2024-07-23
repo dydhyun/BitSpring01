@@ -2,13 +2,10 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
 <mapper namespace="NoticeDao">
     <insert id="post" parameterType="board">
         <selectKey resultType="int" keyProperty="id" order="AFTER">
---                         INSERT 구문 실행 이후 SELECT 구문 실행 , ID가 MAX값으로 세팅. / ID == null -> 1
---                         방금 등록된 게시글의 ID 가져오기
-            SELECT IFNULL(MAX(ID),1) FROM NOTICE
+            SELECT IFNULL(MAX(ID), 1) FROM NOTICE
         </selectKey>
         INSERT INTO NOTICE(
             TITLE,
@@ -54,6 +51,7 @@
                 OR M.NICKNAME LIKE CONCAT('%', #{search.searchKeyword}, '%')
             )
         </if>
+        ORDER BY N.ID DESC
         LIMIT #{cri.amount} OFFSET #{cri.startNum}
     </select>
 
@@ -99,28 +97,44 @@
             </if>
     </select>
 
-
-    <insert id="uploadFiles" parameterType="List">
-        INSERT INTO NOTICE_FILE(
-            BOARD_ID, FILENAME, FILEORIGINNAME, FILEPATH, FILETYPE
+    <insert id="uploadFiles" parameterType="list">
+        INSERT INTO NOTICE_FILE (
+            BOARD_ID,
+            FILENAME,
+            FILEORIGINNAME,
+            FILEPATH,
+            FILETYPE
         ) VALUES
         <foreach collection="list" item="item" separator=",">
-            (
-            #{item.board_id}, #{item.filename}, #{item.fileoriginname}, #{item.filepath}, #{item.filetype}
-            )
-       </foreach>
+        (
+              #{item.board_id},
+              #{item.filename},
+              #{item.fileoriginname},
+              #{item.filepath},
+              #{item.filetype}
+        )
+        </foreach>
     </insert>
 
     <select id="getNoticeFileList" parameterType="int" resultType="boardFile">
-        SELECT ID, BOARD_ID, FILENAME, FILEORIGINNAME, FILEPATH, FILETYPE
-        FROM NOTICE_FILE
-        WHERE BOARD_ID = #{id}
+        SELECT ID
+             , BOARD_ID
+             , FILENAME
+             , FILEORIGINNAME
+             , FILEPATH
+             , FILETYPE
+            FROM NOTICE_FILE
+            WHERE BOARD_ID = #{id}
     </select>
 
     <delete id="deleteFiles" parameterType="int">
         DELETE FROM NOTICE_FILE
-        WHERE BOARD_ID = #{id}
+            WHERE BOARD_ID = #{id}
     </delete>
+
+
+
+
 
 
 

@@ -59,5 +59,19 @@
 
         <jsp:include page="${pageContext.request.contextPath}/footer.jsp"></jsp:include>
     </div>
+    <script>
+        // 추가된 파일들을 하나씩 담아줄 배열. File 객체가 저장
+        const uploadFiles = [];
+
+        $(() => {
+            $("#uploadFiles").on("change", (e) => {
+                // input에 추가된 파일들 변수로 받기
+                const files = e.target.files;
+
+                // 변수로 받아온 파일들 배열로 변환
+                const fileArr = Array.prototype.slice.call(files);
+            });
+        });
+    </script>
 </body>
 </html>

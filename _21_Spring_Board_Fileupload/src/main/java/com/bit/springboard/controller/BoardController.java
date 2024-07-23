@@ -67,7 +67,6 @@ public class BoardController {
         boardService = applicationContext.getBean("freeBoardServiceImpl", BoardService.class);
 //        boardService.updateCnt(boardDto.getId());
         model.addAttribute("freeBoard", boardService.getBoard(boardDto.getId()));
-
         model.addAttribute("fileList", boardService.getBoardFileList(boardDto.getId()));
 
         return "board/free-detail";
@@ -87,9 +86,9 @@ public class BoardController {
             Map<String, Object> map = new HashMap<>();
             map.put("boardDto", boardDto);
 
-            if (boardFileDtoList.size() > 0){
+            if (boardFileDtoList.size() > 0)
                 map.put("file", boardFileDtoList.get(0));
-            }
+
             noticeList.add(map);
         });
 
@@ -124,18 +123,12 @@ public class BoardController {
 
     @PostMapping("/post.do")
     public String post(BoardDto boardDto, MultipartFile[] uploadFiles) {
-        // 배열로 전송되는 파일을 받아 줄 수 있도록 MultipartFile[] 배열
-        // 단일파일의 경우 배열로 받지 않아도 되고, MultipartFile 단일로 받아도 된다.
-        // 파일업로드 부분의 type 속성의 명과 변수명을 맞춰주자
-
         // 게시판 타입에 따른 동적 의존성 주입
         if(boardDto.getType().equals("free")) {
             boardService = applicationContext.getBean("freeBoardServiceImpl", BoardService.class);
         } else {
             boardService = applicationContext.getBean("noticeServiceImpl", BoardService.class);
         }
-
-        // 구현한 파일업로드 기능은 service 로 분리
 
         boardService.post(boardDto, uploadFiles);
 
@@ -147,13 +140,14 @@ public class BoardController {
     }
 
     @PostMapping("/modify.do")
-    public String modify(BoardDto boardDto) {
+    public String modify(BoardDto boardDto, MultipartFile[] uploadFiles, MultipartFile[] changeFiles,
+                         @RequestParam(name = "originFiles", required = false) String originFiles) {
         if(boardDto.getType().equals("free")) {
             boardService = applicationContext.getBean("freeBoardServiceImpl", BoardService.class);
         } else {
             boardService = applicationContext.getBean("noticeServiceImpl", BoardService.class);
         }
-        boardService.modify(boardDto);
+        boardService.modify(boardDto, uploadFiles, changeFiles, originFiles);
 
         if(boardDto.getType().equals("free"))
             return "redirect:/board/free-detail.do?id=" + boardDto.getId();
@@ -185,8 +179,6 @@ public class BoardController {
 
 //        cri.setAmount(9);
 
-
-//        List<BoardDto> noticeList = boardService.getBoardList(searchMap, cri);
         List<Map<String, Object>> noticeList = new ArrayList<>();
 
         boardService.getBoardList(searchMap, cri).forEach(boardDto -> {
@@ -196,12 +188,11 @@ public class BoardController {
 
             map.put("boardDto", boardDto);
 
-            if(boardFileDtoList.size() > 0){
+            if(boardFileDtoList.size() > 0)
                 map.put("file", boardFileDtoList.get(0));
-            }
+
             noticeList.add(map);
         });
-        // Ajax 에서 가져오기위함
 
         Map<String, Object> returnMap = new HashMap<>();
 

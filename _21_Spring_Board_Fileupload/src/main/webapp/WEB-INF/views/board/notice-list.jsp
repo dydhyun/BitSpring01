@@ -24,18 +24,16 @@
             <div class="container mt-3 mb-5 w-75 card-wrapper">
                 <c:forEach items="${noticeList}" var="notice">
                     <div class="card" style="width: 18rem;">
-
                         <c:choose>
-                            <c:when test="${notice.file != null and notice.file.tiletype eq 'image'}">
+                            <c:when test="${notice.file != null and notice.file.filetype eq 'image'}">
                                 <img class="bd-placeholder-img card-img-top" width="100%" height="180"
                                      src="/upload/${notice.file.filename}"
-                                     alt="dd">
+                                     alt="${notice.file.fileoriginname}">
                             </c:when>
                             <c:otherwise>
                                 <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"></rect></svg>
                             </c:otherwise>
                         </c:choose>
-
                         <div class="card-body">
                             <h5 class="card-title">${notice.boardDto.title}</h5>
                             <p class="card-text">작성일:
@@ -99,14 +97,13 @@
             }
 
             const makeImageElement = (file) => {
-                if (file !== undefined && file.filetype === 'image'){
-                    console.log("test1");
-                    return `<img class="bd-placeholder-img card-img-top" width="100%" height="180" src="/upload/\${file.filename}" alt="\${file.fileoriginname}">`;
+                console.log(file);
+                if(typeof file != 'undefined' && file.filetype === 'image') {
+                    return `<img class="bd-placeholder-img card-img-top" width="100%" height="180" src="/upload/\${file.filename}" alt=\${file.fileoriginname}>`
                 }
+
                 return `<svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"></rect></svg>`;
             }
-
-
 
             $(window).on("scroll", (e) => {
                 // 현재 스크롤의 위치

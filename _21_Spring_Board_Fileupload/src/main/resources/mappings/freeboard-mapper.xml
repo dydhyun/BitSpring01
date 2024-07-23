@@ -6,8 +6,7 @@
 <mapper namespace="FreeBoardDao">
     <insert id="post" parameterType="board">
         <selectKey resultType="int" keyProperty="id" order="AFTER">
---             INSERT 구문 실행 이후 SELECT 구문 실행 , ID가 MAX값으로 세팅.
-            SELECT IFNULL(MAX(ID),1) FROM FREEBOARD
+            SELECT IFNULL(MAX(ID), 1) FROM FREEBOARD
         </selectKey>
         INSERT INTO FREEBOARD(
             TITLE,
@@ -63,6 +62,7 @@
                 AND M.NICKNAME LIKE CONCAT('%', #{search.searchKeyword}, '%')
             </if>
         </if>
+        ORDER BY F.ID DESC
         LIMIT #{cri.amount} OFFSET #{cri.startNum}
     </select>
 
@@ -119,33 +119,73 @@
             </if>
     </select>
 
-
-    <insert id="uploadFiles" parameterType="List">
+    <insert id="uploadFiles" parameterType="list">
         INSERT INTO FREEBOARD_FILE (
-            BOARD_ID, FILENAME, FILEORIGINNAME, FILEPATH, FILETYPE
+            BOARD_ID,
+            FILENAME,
+            FILEORIGINNAME,
+            FILEPATH,
+            FILETYPE
         ) VALUES
         <foreach collection="list" item="item" separator=",">
-          (
-           #{item.board_id}, #{item.filename}, #{item.fileoriginname}, #{item.filepath}, #{item.filetype}
+            (
+                #{item.board_id},
+                #{item.filename},
+                #{item.fileoriginname},
+                #{item.filepath},
+                #{item.filetype}
             )
         </foreach>
-
     </insert>
 
     <select id="getFreeBoardFileList" parameterType="int" resultType="boardFile">
-        SELECT ID, BOARD_ID, FILENAME, FILEORIGINNAME, FILEPATH, FILETYPE
-        FROM FREEBOARD_FILE
-        WHERE BOARD_ID = #{id}
+        SELECT ID
+             , BOARD_ID
+             , FILENAME
+             , FILEORIGINNAME
+             , FILEPATH
+             , FILETYPE
+            FROM FREEBOARD_FILE
+            WHERE BOARD_ID = #{id}
     </select>
 
     <delete id="deleteFiles" parameterType="int">
         DELETE FROM FREEBOARD_FILE
-        WHERE BOARD_ID = #{id}
+            WHERE BOARD_ID = #{id}
     </delete>
 
+    <insert id="postBoardFileOne" parameterType="boardFile">
+        INSERT INTO FREEBOARD_FILE(
+            BOARD_ID,
+            FILENAME,
+            FILEORIGINNAME,
+            FILEPATH,
+            FILETYPE
+        ) VALUES (
+            #{board_id},
+            #{filename},
+            #{fileoriginname},
+            #{filepath},
+            #{filetype}
+        )
+    </insert>
 
-
-
+    <update id="modifyBoardFileOne" parameterType="boardFile">
+        UPDATE FREEBOARD_FILE
+            SET
+                FILENAME = #{filename},
+                FILEORIGINNAME = #{fileoriginname},
+                FILEPATH = #{filepath},
+                FILETYPE = #{filetype}
+            WHERE ID = #{id}
+              AND BOARD_ID = #{board_id}
+    </update>
+    
+    <delete id="deleteBoardFileOne" parameterType="boardFile">
+        DELETE FROM FREEBOARD_FILE
+            WHERE ID = #{id}
+              AND BOARD_ID = #{board_id}
+    </delete>
 
 
 

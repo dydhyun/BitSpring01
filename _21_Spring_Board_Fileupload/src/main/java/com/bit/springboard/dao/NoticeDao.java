@@ -23,11 +23,12 @@ public class NoticeDao {
 
         mybatis.insert("NoticeDao.post", boardDto);
 
-        if(boardFileDtoList.size()>0) {
+        if(boardFileDtoList.size() > 0) {
             boardFileDtoList.forEach(boardFileDto -> boardFileDto.setBoard_id(boardDto.getId()));
+
             mybatis.insert("NoticeDao.uploadFiles", boardFileDtoList);
-            System.out.println("NoticeDao.post>uploadFiles 완료");
         }
+
         System.out.println("NoticeDao의 post 메소드 실행 종료");
     }
 

@@ -27,31 +27,30 @@ public class NoticeServiceImpl implements BoardService {
     public void post(BoardDto boardDto, MultipartFile[] uploadFiles) {
         List<BoardFileDto> boardFileDtoList = new ArrayList<>();
 
-        if(uploadFiles != null && uploadFiles.length > 0){
-            String attachPath = "C://tmp/upload/";
+        if(uploadFiles != null && uploadFiles.length > 0) {
+            String attachPath = "C:/tmp/upload/";
 
             File directory = new File(attachPath);
-            // 위 경로가 존재하지 않으면,
-            // 있으면 참, 없으면 거짓 : !false -> 새 폴더 생성하기
-            if (!directory.exists()){
+
+            if (!directory.exists()) {
                 directory.mkdirs();
             }
 
-            Arrays.stream(uploadFiles).forEach(file ->{
+            Arrays.stream(uploadFiles).forEach(file -> {
+                if(file.getOriginalFilename() != null && !file.getOriginalFilename().equals("")) {
+                    BoardFileDto boardFileDto = FileUtils.parserFileInfo(file, attachPath);
 
-                if (file.getOriginalFilename() != null && !file.getOriginalFilename().equals("")) {
-                    BoardFileDto boardFileDto = FileUtils.parseFileInfo(file, attachPath);
                     boardFileDtoList.add(boardFileDto);
                 }
             });
-
         }
+
 
         noticeDao.post(boardDto, boardFileDtoList);
     }
 
     @Override
-    public void modify(BoardDto boardDto) {
+    public void modify(BoardDto boardDto, MultipartFile[] uploadFiles, MultipartFile[] changeFiles, String originFiles) {
         boardDto.setModdate(LocalDateTime.now());
         noticeDao.modify(boardDto);
     }
@@ -87,10 +86,8 @@ public class NoticeServiceImpl implements BoardService {
         return noticeDao.getBoardTotalCnt(searchMap);
     }
 
-
     @Override
     public List<BoardFileDto> getBoardFileList(int id) {
         return noticeDao.getNoticeFileList(id);
     }
-
 }
